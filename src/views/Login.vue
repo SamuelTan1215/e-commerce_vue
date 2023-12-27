@@ -50,15 +50,20 @@ export default {
         signIn(){
             console.log('login');
             //組 API
+            // bug 沒有辦法登入
             const api = `${process.env.VUE_APP_API}admin/signin`;
-            console.log(api);
             this.$http.post(api ,this.user)
             .then((res)=>{
-                const token = res.data.token;
-                const expired = res.data.expired;
-                console.log(token, expired);
-                document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-                console.log(res);
+                // 如果的登入成功的狀態，就執行
+                if(res.data.success){
+                    const token = res.data.token;
+                    const expired = res.data.expired;
+                    console.log(token, expired);
+                    document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+                    console.log(res);
+                    //轉址到Dashboard頁面
+                    this.$router.push('/dashboard/products');
+                }
             })
         }
     }
