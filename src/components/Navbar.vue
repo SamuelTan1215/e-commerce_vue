@@ -32,7 +32,7 @@ export default{
     logout(){
       console.log('logout')
       const api = `${process.env.VUE_APP_API}logout`;
-      console.log(this.user);
+      console.log(api);
         this.$http.post(api ,this.user)
         .then((res)=>{
           // 如果的登入成功的狀態，就執行

@@ -48,7 +48,6 @@ export default {
     // 串接API
     methods:{
         signIn(){
-            console.log('login');
             //組 API
             // bug 沒有辦法登入
             const api = `${process.env.VUE_APP_API}admin/signin`;

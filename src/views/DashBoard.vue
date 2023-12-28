@@ -1,6 +1,9 @@
 <template>
   <Navbar></Navbar>
-  <router-view/>
+  <div class="container-fluid">
+    <!--這裡的rw呈現的是Products.vue的畫面？感覺會像是在父層放的rw會是子層的畫面-->
+    <router-view/>
+  </div>
 </template>
 
 <script>
