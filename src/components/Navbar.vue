@@ -28,17 +28,13 @@
 <script>
 export default{
   methods:{
-    // bug logout 有被觸發，但是if 內的判斷沒有觸發跟this.user有關係嗎？
+    // bug this.user為什麼
     logout(){
-      console.log('logout')
       const api = `${process.env.VUE_APP_API}logout`;
-      console.log(api);
         this.$http.post(api ,this.user)
         .then((res)=>{
-          // 如果的登入成功的狀態，就執行
+          // 如果的登入成功的狀態，就執行轉址到login頁面
           if(res.data.success){
-            console.log(res);
-              //轉址到login頁面
             this.$router.push('/login');
           }
         })

@@ -53,14 +53,12 @@ export default {
             const api = `${process.env.VUE_APP_API}admin/signin`;
             this.$http.post(api ,this.user)
             .then((res)=>{
-                // 如果的登入成功的狀態，就執行
+                // 如果登入成功，將token 和expired 組好存在cookie
+                //轉址到Dashboard/products頁面
                 if(res.data.success){
                     const token = res.data.token;
                     const expired = res.data.expired;
-                    console.log(token, expired);
                     document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-                    console.log(res);
-                    //轉址到Dashboard頁面
                     this.$router.push('/dashboard/products');
                 }
             })

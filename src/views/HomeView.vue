@@ -14,8 +14,10 @@ export default {
   components: {
     HelloWorld
   },
-  created(){
-    console.log(process.env.VUE_APP_API,process.env.VUE_APP_PATH);
-  },
+
+  // bug 為什麼要加這一段
+  // created(){
+  //   console.log(process.env.VUE_APP_API,process.env.VUE_APP_PATH);
+  // },
 }
 </script>
