@@ -1,6 +1,6 @@
 <template>
   <div class="text-end">
-    <button class="btn btn-primary" type="button" @click="$refs.productModal.showModal">增加一個產品</button>
+    <button class="btn btn-primary" type="button" @click="openModal(true)">增加一個產品</button>
   </div>
   <table class="table mt-4">
     <thead>
@@ -29,14 +29,14 @@
         </td>
         <td>
           <div class="btn-group">
-            <button class="btn btn-outline-primary btn-sm">編輯</button>
+            <button class="btn btn-outline-primary btn-sm" @click="openModal(false,item)">編輯</button>
             <button class="btn btn-outline-danger btn-sm">刪除</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
-  <ProductModal ref="productModal"></ProductModal>
+  <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
 </template>
 
 <script>
@@ -46,12 +46,13 @@ export default{
     return {
       products:[],
       pagination:{},
+      tempProduct:{},
+      isNew:false,
     }
   },
   components:{
     ProductModal,
   },
-  // bug 沒有取得res，axios 設定錯誤？
   // 取得產品列表（產品資訊，分頁）
   methods:{
     getProducts(){
@@ -63,7 +64,37 @@ export default{
           this.pagination = res.data.pagination;
         }
       })
-    }
+    },
+    //清空，然後展開product.component
+    //參數1是確認他是不是新的，參數2是在如果確定是編輯的狀態就將他加進來
+    openModal(isNew,item){
+      if(isNew){
+        this.tempProduct = {};
+      }else{
+        this.tempProduct = {...item};
+      }
+      this.isNew = isNew;
+      const productComponent = this.$refs.productModal;
+      productComponent.showModal();
+    },
+    updateProduct(item){
+      this.tempProduct = item;
+      //新增
+      let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`;
+      const productComponent = this.$refs.productModal;
+      let httpMethod = 'post';
+
+      //編輯
+      if(!this.isNew){
+        api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${item.id}`;
+        httpMethod = 'put';
+      }
+      this.$http[httpMethod](api,{data:this.tempProduct})
+      .then((response)=>{
+        productComponent.hideModal();
+        this.getProducts();
+      })
+    },
   },
   created(){
     this.getProducts();
