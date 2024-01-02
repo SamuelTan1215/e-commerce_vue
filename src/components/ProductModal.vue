@@ -117,7 +117,8 @@ props的product 是外層的tempproduct
 </template>
 
 <script>
-import Modal from 'bootstrap/js/dist/modal'
+import modalMixin from '@/mixins/modalMixin';
+
 //tempProduct會接收外層Products props傳進來的資料
 export default {
   props:{
@@ -139,12 +140,6 @@ export default {
     };
   },
   methods:{
-    showModal(){
-      this.modal.show();
-    },
-    hideModal(){
-      this.modal.hide();
-    },
     uploadFile(){
       const uploadedFile = this.$refs.fileInput.files[0];
       const formData = new FormData();
@@ -152,7 +147,7 @@ export default {
       const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/upload`;
       this.$http.post(url, formData)
       .then((res)=>{
-        // bug 打不開照片的網址
+        // bug 打不開照片檔案伺服器路徑
         console.log(res.data);
         // if(res.data.success){
         //   this.tempProduct.imgUrl = res.data.imgUrl;
@@ -160,9 +155,7 @@ export default {
       })
     },
   },
-  mounted() {
-    this.modal = new Modal(this.$refs.modal);
-  },
+  mixins: [modalMixin],
 }
 
 //在ProductModal.vue 引入Bootstrap Modal樣式

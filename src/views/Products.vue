@@ -1,5 +1,6 @@
 <template>
-  <div class="text-end">
+  <LoadingPlugin :active="isLoading"></LoadingPlugin>
+  <div class="text-end mt-3">
     <button class="btn btn-primary" type="button" @click="openModal(true)">增加一個產品</button>
   </div>
   <table class="table mt-4">
@@ -30,17 +31,20 @@
         <td>
           <div class="btn-group">
             <button class="btn btn-outline-primary btn-sm" @click="openModal(false,item)">編輯</button>
-            <button class="btn btn-outline-danger btn-sm">刪除</button>
+            <button class="btn btn-outline-danger btn-sm" @click="openDelProductModal(item)">刪除</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
   <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
+  <DelModal :item="tempProduct" ref="delModal" @del-item="delProduct"/>
 </template>
 
 <script>
-import ProductModal from '../components/ProductModal.vue'
+import ProductModal from '@/components/ProductModal.vue'
+import DelModal from '@/components/DelModal.vue';
+
 export default{
   data(){
     return {
@@ -48,17 +52,22 @@ export default{
       pagination:{},
       tempProduct:{},
       isNew:false,
+      isLoading:false,
     }
   },
   components:{
     ProductModal,
+    DelModal,
   },
   // 取得產品列表（產品資訊，分頁）
+    // bug loadingPlugin沒有成功展現效果
   methods:{
     getProducts(){
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products`;
+      this.isLoading = true;
       this.$http.get(api)
       .then((res)=>{
+        this.isLoading = false;
         if(res.data.success){
           this.products = res.data.products;
           this.pagination = res.data.pagination;
@@ -94,6 +103,21 @@ export default{
         productComponent.hideModal();
         this.getProducts();
       })
+    },
+    // 開啟刪除 Modal
+    openDelProductModal(item) {
+    this.tempProduct = { ...item };
+    const delComponent = this.$refs.delModal;
+    delComponent.showModal();
+    },
+    delProduct() {
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${this.tempProduct.id}`;
+      this.$http.delete(url).then((response) => {
+        console.log(response.data);
+        const delComponent = this.$refs.delModal;
+        delComponent.hideModal();
+        this.getProducts();
+      });
     },
   },
   created(){
