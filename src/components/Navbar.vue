@@ -28,10 +28,9 @@
 <script>
 export default{
   methods:{
-    // bug this.user為什麼
     logout(){
       const api = `${process.env.VUE_APP_API}logout`;
-        this.$http.post(api ,this.user)
+        this.$http.post(api)
         .then((res)=>{
           // 如果的登入成功的狀態，就執行轉址到login頁面
           if(res.data.success){
