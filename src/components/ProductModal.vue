@@ -149,10 +149,11 @@ export default {
       .then((res)=>{
         // bug 打不開照片檔案伺服器路徑
         console.log(res.data);
-        // if(res.data.success){
-        //   this.tempProduct.imgUrl = res.data.imgUrl;
-        // }
+        if(res.data.success){
+          this.tempProduct.imgUrl = res.data.imageUrl;
+        }
       })
+      console.log(this.tempProduct.imageUrl);
     },
   },
   mixins: [modalMixin],
